@@ -1,20 +1,30 @@
-import pygame
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' #Hides the welcome message of pygame
+import pygame, random #Importing pygame has to be done after modifying the environment variable
 
 pygame.init()
-FLAGS = pygame.HWSURFACE | pygame.DOUBLEBUF
 SCREEN_WIDTH, SCREEN_HEIGTH = 600, 600
 CELL_WIDTH, CELL_HEIGTH = SCREEN_WIDTH // 3, SCREEN_HEIGTH // 3
 MAX_FPS = 60
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH), FLAGS)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Tris")
+pygame.display.set_icon(pygame.image.load('window_icon.png').convert_alpha())
 is_player_one_turn = True #Bool variable to control the switching of turns
 grid = [[0, 0, 0], 
         [0, 0, 0],
         [0, 0, 0]] # 0 = empty, 1 = player 1, 2 = player 2
 
+#end screens
+player_one_win_text = pygame.font.SysFont('Arial', 50).render('Player 1 wins!', True, 'white')
+player_two_win_text = pygame.font.SysFont('Arial', 50).render('Player 2 wins!', True, 'white')
+draw_text = pygame.font.SysFont('Arial', 50).render('Draw!', True, 'white')
+end_message_rect = player_one_win_text.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGTH//2 - 50))
+
 # Draw grid
-screen.fill('gray33')
+colors = 'mediumpurple3 indigo crimson seagreen1 salmon1 purple2 plum3 palevioletred violetred springgreen4 steelblue4 steelblue slateblue4 slateblue sienna2 blue cyan skyblue purple magenta red green blue yellow cyan magenta white'.split()
+selected_color = random.choice(colors)
+screen.fill(selected_color)
 for i in range(1, 3):
     pygame.draw.line(screen, 'white', (i*200, 0), (i*200, SCREEN_HEIGTH), 5)
     pygame.draw.line(screen, 'white', (0, i*200), (SCREEN_WIDTH, i*200), 5)
@@ -67,7 +77,17 @@ def check_victory(grid):
 
     return 'Continue'
 
-
+def show_end_screen(result):
+    screen.fill(selected_color)
+    if result == 1:
+        screen.blit(player_one_win_text, end_message_rect)
+    elif result == 2:
+        screen.blit(player_two_win_text, end_message_rect)
+    else:
+        screen.blit(draw_text, end_message_rect)
+    pygame.display.flip()
+    pygame.time.wait(3000)
+    quit_game()
 
 # Game loop
 while True:
@@ -76,7 +96,9 @@ while True:
         elif event.type == pygame.MOUSEBUTTONDOWN:
            selected_cell = handle_mouse_input()
            update_visualized_grid(selected_cell)
-           check_victory()
+           result = check_victory(grid)
+           if result != 'Continue':
+               show_end_screen(result)
 
     pygame.display.flip()
     clock.tick(60)
