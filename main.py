@@ -22,7 +22,9 @@ draw_text = pygame.font.SysFont('Arial', 50).render('Draw!', True, 'white')
 end_message_rect = player_one_win_text.get_rect(center=(SCREEN_WIDTH//2, SCREEN_HEIGTH//2 - 50))
 
 # Draw grid
-colors = 'mediumpurple3 indigo crimson seagreen1 salmon1 purple2 plum3 palevioletred violetred springgreen4 steelblue4 steelblue slateblue4 slateblue sienna2 blue cyan skyblue purple magenta red green blue yellow cyan magenta white'.split()
+colors = 'greenyellow goldenrod2 fuchsia deeppink4 cornflowerblue darkred darkslategrey blueviolet mediumpurple3 indigo crimson seagreen1 salmon1 purple2 plum3 palevioletred violetred springgreen4 \
+                          steelblue4 steelblue slateblue4 slateblue sienna2 cyan skyblue purple magenta red green blue yellow \
+                          white'.split()
 selected_color = random.choice(colors)
 screen.fill(selected_color)
 for i in range(1, 3):
